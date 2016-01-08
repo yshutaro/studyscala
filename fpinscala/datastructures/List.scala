@@ -27,4 +27,14 @@ object List{
       case Cons(h, t) => h + sum(t)
       case _ => 101
    }
+
+  def tail[A](as: List[A]): List[A] = as match{
+    case Nil => Nil
+    case Cons(a, as) => as
+  }
+
+  def setHead[A](l: List[A], a:A): List[A] = l match{
+    case Nil => Nil
+    case Cons(x, _) => Cons(a, tail(l))
+  }
 }
