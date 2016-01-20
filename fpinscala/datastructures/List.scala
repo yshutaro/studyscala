@@ -35,6 +35,13 @@ object List{
 
   def setHead[A](l: List[A], a:A): List[A] = l match{
     case Nil => Nil
-    case Cons(x, _) => Cons(a, tail(l))
+    case Cons(_, xs) => Cons(a, xs)
+  }
+
+  def drop[A](l: List[A], n:Int): List[A] = l match{
+    case Nil => Nil
+    case Cons(_, as) => 
+      if(n==1) as
+      else drop(as,n-1)
   }
 }
