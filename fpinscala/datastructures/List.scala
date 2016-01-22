@@ -44,4 +44,23 @@ object List{
       if(n==1) as
       else drop(as,n-1)
   }
+
+  def dropWhile[A](l: List[A], f: A => Boolean): List[A] = l match{
+      case Nil => Nil
+      case Cons(a, as) => 
+        if(f(a) == true) as
+        else dropWhile(as, f)
+  }
+
+  def dropWhileAnser[A](l: List[A], f: A => Boolean): List[A] = 
+    l match {
+      case Cons(h,t) if !f(h) => dropWhile(t, f) 
+      case _ => l
+   }
+
+   def init[A](l:List[A]): List[A] = l match{
+    case Nil => Nil 
+    case Cons(x,Nil) => Nil 
+    case Cons(x,xs) => Cons(x, init(xs))
+   }
 }
