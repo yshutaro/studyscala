@@ -52,7 +52,7 @@ object List{
         else dropWhile(as, f)
   }
 
-  def dropWhileAnwser[A](l: List[A], f: A => Boolean): List[A] = 
+  def dropWhileAnswer[A](l: List[A], f: A => Boolean): List[A] = 
     l match {
       case Cons(h,t) if !f(h) => dropWhile(t, f) 
       case _ => l
