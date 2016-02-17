@@ -44,18 +44,25 @@ object List{
       if(n==1) as
       else drop(as,n-1)
   }
-
+/*
   def dropWhile[A](l: List[A], f: A => Boolean): List[A] = l match{
       case Nil => Nil
       case Cons(a, as) => 
         if(f(a) == true) as
         else dropWhile(as, f)
   }
-
   def dropWhileAnswer[A](l: List[A], f: A => Boolean): List[A] = 
+*/
+  def dropWhile[A](l: List[A], f: A => Boolean): List[A] = 
     l match {
-      case Cons(h,t) if !f(h) => dropWhile(t, f) 
+      case Cons(h,t) if f(h) => dropWhile(t, f) 
       case _ => l
+   }
+
+  def dropWhileCurry[A](as: List[A])(f: A => Boolean): List[A] = 
+    as match {
+      case Cons(h,t) if f(h) => dropWhileCurry(t)(f) 
+      case _ => as 
    }
 
    def init[A](l:List[A]): List[A] = l match{
@@ -63,4 +70,43 @@ object List{
     case Cons(x,Nil) => Nil 
     case Cons(x,xs) => Cons(x, init(xs))
    }
+
+   def foldRight[A, B](as: List[A], z:B)(f: (A, B) => B):B = 
+    as match {
+      case Nil => z
+      case Cons(x, xs) => f(x, foldRight(xs,z)(f))
+    }
+
+  def sum2(ns: List[Int]) =
+    foldRight(ns, 0)((x,y) => x + y)
+
+  def product2(ns: List[Double]) =
+    foldRight(ns, 1.0)(_ * _)
+
+  def length[A](as: List[A]):Int =
+    foldRight(as, 0)((_,y)  => 1 + y )
+
+  def myfoldLeft[A, B](as: List[A], z:B)(f: (B, A) => B):B =
+    as match{
+      case Nil => z
+      case Cons(x, xs) => f(foldLeft(xs,z)(f), x)
+    }
+
+  def foldLeft[A, B](as: List[A], z:B)(f: (B, A) => B):B =
+    as match{
+      case Nil => z
+      case Cons(h, t) => foldLeft(t,f(z,h))(f)
+    }
+
+  def sum3(ns: List[Int]) = 
+    foldLeft(ns,0)((x,y) => x + y)
+
+  def product3(ns: List[Double]) =
+    foldLeft(ns, 1.0)(_ * _)
+
+  def length3[A](as: List[A]):Int =
+    foldLeft(as, 0)((y,_)  => 1 + y )
+
+  def reverse[A](as: List[A]):List[A] =
+    foldLeft(as, Nil)( (xs, x) => Cons(x,xs))
 }
