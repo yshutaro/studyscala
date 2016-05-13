@@ -123,4 +123,68 @@ object List{
 
   def append[A](a1: List[A], a2: List[A]): List[A] =
     foldRight(a1, a2)( (h,acc) => Cons(h,acc) )
-}
+
+/*
+  def addOne[A](as:List[Int]):List[Int] = 
+    as match{
+      case Nil => Nil
+      case Cons(x,xs) => Cons(x + 1, addOne(xs))
+    }
+*/
+  def addOne(as:List[Int]):List[Int] = 
+    foldRight(as,List[Int]())( (x,xs) => Cons(x + 1,xs))
+
+  def convertString(as:List[Double]):List[String] = 
+    foldRight(as, Nil:List[String])( (x,xs) => Cons(x.toString,xs))
+
+  def concat[A](l: List[List[A]]): List[A] =
+    foldRight(l, Nil:List[A])(append)
+ 
+  def map[A,B](as: List[A])(f:A => B): List[B] =
+    foldRight(as, Nil:List[B])( (x,xs) => Cons(f(x),xs))
+
+  def myfilter[A](as: List[A])(f:A => Boolean): List[A] =
+    foldRight(as, Nil:List[A])( (x,xs) => 
+      f(x) match {
+        case true => Cons(x,xs)
+        case _ => xs
+      })
+
+  def filter[A](as: List[A])(f:A => Boolean): List[A] =
+    foldRight(as, Nil:List[A])( (x,xs) => if(f(x)) Cons(x,xs) else xs)
+
+  def myflatMap[A,B](as: List[A])(f:A => List[B]):List[B] =
+    foldRight(as, Nil:List[B])( (x,xs) => append(f(x),xs) )
+  
+  def flatMap[A,B](l: List[A])(f:A => List[B]):List[B] =
+    concat(map(l)(f))
+
+  def filter2[A](as: List[A])(f:A => Boolean): List[A] =
+    flatMap(as)( i => if(f(i)) List(i) else Nil )
+
+  //def addList[A](xs1: List[A])(xs2:List[A]): List[A] =
+  //  flatMap(xs2)(j => flatMap(xs1)(i => List(i)) + j)
+  def addPairwise(a: List[Int], b:List[Int]): List[Int] = (a,b) match {
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(h1,t1), Cons(h2,t2)) => Cons(h1+h2, addPairwise(t1,t2))
+  }
+
+  def zipWith[A,B,C](a: List[A], b:List[B])(f:(A,B) => C): List[A] = (a,b) match {
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(h1,t1), Cons(h2,t2)) => Cons(f(h1,h2), zipWith(t1,t2)(f))
+  }
+
+  def startsWith[A](l: List[A], prefix: List[A]): Boolean = (l,prefix) match{
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(h,t), Cons(h2,t2)) if h1 == h2 > startsWith(t, t2)
+    case _ => false
+  }
+  def hasSubsequence[A](sup: List[A], sub:List[A]): Boolean = sub match {
+    case (xs append ys) startsWith xs
+    xs startsWith Nil
+    (xs append ys append zs) hasSubsequence ys
+    xs hasSubsequence Nil
+  }
